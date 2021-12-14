@@ -19,7 +19,7 @@ export async function main(ns) {
 		return;
 	}
 
-	const data = ns.readPort(10);
+	const data = ns.peek(10);
 	ns.print(data);
 	const status = JSON.parse(data);
 
