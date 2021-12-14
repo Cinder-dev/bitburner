@@ -27,7 +27,7 @@ export async function main(ns) {
             ns.tprint(`Failed to get ${file} from github.`);
             ns.toast(`Failed to get ${file} from github.`, "error");
         }
-        await ns.sleep(200);
+        await ns.sleep(500);
     }
     ns.toast("Finished Updating Code From Github", "info");
 }
