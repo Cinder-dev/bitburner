@@ -4,7 +4,7 @@ export async function main(ns) {
 	// Infinite loop that continously hacks/grows/weakens the target server
 	while(true) {
 		let host = ns.getHostname();
-		let serverInfo = JSON.parse(ns.peek(1));
+		let serverInfo = JSON.parse(ns.peek(19));
 		let moneyThreshold = serverInfo.moneyMax * 0.75;
 		let securityThreshold = serverInfo.minDifficulty + 5;
 

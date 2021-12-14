@@ -22,9 +22,9 @@ export async function main(ns) {
 
 	while(true) {
 		let pull = ""
-		do { pull = ns.readPort(1); } while (pull != "NULL PORT DATA");
+		do { pull = ns.readPort(19); } while (pull != "NULL PORT DATA");
 		serverInfo = ns.getServer(target);
-		await ns.writePort(1, JSON.stringify(serverInfo));
+		await ns.writePort(19, JSON.stringify(serverInfo));
 		logInfo(ns, serverInfo);
 		await ns.sleep(1000);
 	}
