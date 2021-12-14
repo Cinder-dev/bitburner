@@ -4,7 +4,10 @@ let isRunning = false;
 
 /** @param {NS} ns **/
 export async function main(ns) {
-	if (isRunning) return;
+	if (isRunning) {
+		ns.tprint("Command Center already running.");
+		return;
+	}
 	isRunning = true;
 	const commandCenter = new CommandCenter(ns);
 	ns.tail("/cc/commandCenter.js", "home");

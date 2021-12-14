@@ -6,7 +6,7 @@ export async function main(ns) {
 		// Do Nothing, Command Center is not running
 		ns.tprint("Command Center is not running")
 	}
-	if (ns.args.lenght === 0) {
+	if (ns.args.lenght < 1) {
 		// No arguments, show usage.
 		ns.tprint(
 			"No arguments supplied, usage: modules [command] [args]\n" + 
