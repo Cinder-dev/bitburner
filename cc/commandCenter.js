@@ -44,6 +44,7 @@ class CommandCenter {
 			for (const module of this.modules) {
 				await module.update();
 			}
+			this.postStatus();
 			await this.ns.sleep(100);
 		}
 		
