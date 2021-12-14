@@ -22,7 +22,7 @@ function _startAll(ns, root, target) {
 	if (!ns.hasRootAccess(target)) {
 		rootServer(ns, target);
 	}
-	ns.exec("/hacks/master.ns", target, 1, ns.args[0]);
+	ns.exec("/hacks/master.js", target, 1, ns.args[0]);
 	ns.scan(target)
 		.filter(host => host !== root)
 		.forEach(host => _startAll(ns, target, host));
