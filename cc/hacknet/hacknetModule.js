@@ -15,7 +15,7 @@ export async function main(ns) {
 		return;
 	}
 	isRunning = true;
-	const hacknetModule = new HacknetModule(ns);
+	const hacknetModule = new HacknetModule(ns, ns.args[0]);
 	ns.tail("/cc/hacknet/hacknetModule.js", "home", ...ns.args);
 	ns.atExit(() => isRunning = false);
 

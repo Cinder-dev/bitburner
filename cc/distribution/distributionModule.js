@@ -15,7 +15,7 @@ export async function main(ns) {
 		return;
 	}
 	isRunning = true;
-	const distributionModule = new DistributionModule(ns);
+	const distributionModule = new DistributionModule(ns, ns.args[0]);
 	ns.tail("/cc/distribution/distributionModule.js", "home", ...ns.args);
 	ns.atExit(() => isRunning = false);
 
