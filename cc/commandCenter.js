@@ -17,39 +17,43 @@ export async function main(ns) {
 	await commandCenter.start();
 }
 
+export const Modules = [
+	{ name: "Hacknet", script: "/cc/hacknet/hacknetModule.js", threads: 1, port: 2, pid = -1 },
+	{ name: "Distribution", script: "/cc/distribution/distributionModule.js", threads: 1, port: 3, pid = -1 },
+];
+
 class CommandCenter {
 	/** @param {NS} ns Scripting Runtime */
 	constructor(ns) {
 		this.ns = ns;
-		this.modules = [
-			new HacknetModule(ns),
-		];
+		this.modules = [...Modules];
 		this.running = true;
 	}
 
 	async postStatus() {
 		// Purge old data
 		let pull = ""
-		do { pull = this.ns.readPort(10); } while (pull != "NULL PORT DATA");
+		do { pull = this.ns.readPort(1); } while (pull != "NULL PORT DATA");
 		let status = JSON.stringify({
 			modules: {
-				running: this.modules.map(module => module.name),
+				running: this.modules.filter(module => module.pid !== -1).map(module => module.name),
 			}
 		});
-		await this.ns.writePort(10, status);
+		await this.ns.writePort(1, status);
 	}
 
 	async start() {
+		for (const module of this.modules) {
+			module.pid = this.ns.run(module.script, module.threads, module.port);
+		}
+
 		while(this.running) {
-			for (const module of this.modules) {
-				await module.update();
-			}
 			await this.postStatus();
 			await this.ns.sleep(100);
 		}
 		
 		for (const module of this.modules) {
-			await module.shutdown();
+			this.ns.kill(module.script, "home", module.port);
 		}
 	}
 
