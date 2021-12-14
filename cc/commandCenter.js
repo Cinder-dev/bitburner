@@ -30,7 +30,7 @@ class CommandCenter {
 	async postStatus() {
 		// Purge old data
 		let pull = ""
-		do { pull = ns.readPort(1); } while (pull != "NULL PORT DATA");
+		do { pull = this.ns.readPort(1); } while (pull != "NULL PORT DATA");
 		let status = JSON.stringify({
 			modules: {
 				running: this.modules.map(module => module.name),
