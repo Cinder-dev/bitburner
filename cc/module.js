@@ -1,7 +1,11 @@
 export class Module {
-	/** @param {NS} ns Scripting Runtime */
-	constructor(ns) {
+	/** 
+	 * @param {NS} ns Scripting Runtime 
+	 * @param {string} name module name
+	 */
+	constructor(ns, name) {
 		this.ns = ns;
+		this.name = name
 	}
 
 	async update() {

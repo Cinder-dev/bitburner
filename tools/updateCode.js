@@ -1,6 +1,7 @@
 const baseURL = "https://raw.githubusercontent.com/Cinder-dev/bitburner/main";
 
 const files = [
+    "/cc/commands/modules.js",
     "/cc/hacknet/hacknetModule.js",
     "/cc/commandCenter.js",
     "/cc/module.js",
@@ -12,7 +13,6 @@ const files = [
     "/tools/replicate.js",
     "/tools/serverCost.js",
     "/tools/status.js",
-    // "/tools/updateCode.js", // Can't download update while running updater.
 ];
 
 /** {NS} ns Scripting Runtime */
