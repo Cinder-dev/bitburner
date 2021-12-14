@@ -6,12 +6,13 @@ const files = [
     "/cc/module.js",
     "/hacks/master.js",
     "/hacks/worker.js",
+    "/servers/buy.js",
     "/tools/backdoor.js",
     "/tools/distribute.js",
     "/tools/replicate.js",
     "/tools/serverCost.js",
     "/tools/status.js",
-    "/tools/updateCode.js",
+    // "/tools/updateCode.js", // Can't download update while running updater.
 ];
 
 /** {NS} ns Scripting Runtime */
