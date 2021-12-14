@@ -9,10 +9,10 @@ export class Module {
 	}
 
 	async update() {
-		this.ns.print("Module is not implementing update");
+		this.ns.print(`${this.name} Module is not implementing update`);
 	}
 
 	async shutdown() {
-		this.ns.print("Module is not implementing shutdown");
+		this.ns.print(`${this.name} Module is not implementing shutdown`);
 	}
 }

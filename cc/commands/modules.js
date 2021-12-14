@@ -18,4 +18,24 @@ export async function main(ns) {
 		);
 		return;
 	}
+
+	const status = JSON.parse(ns.readPort(10));
+
+	switch (ns.args[0]) {
+		case "-l": {
+			status.modules.running.forEach(name => ns.tprint(name));
+			return;
+		}
+		default: {
+			// Invalid Argument, show usage.
+			ns.tprint("Invalid arguments supplied, usage: modules [command] [args]\n" + 
+				"-l          | List Running Modules\n" +
+				"-a          | List Available Modules\n" + 
+				"-r [module] | Restart a Module\n" + 
+				"-s [module] | Stop a Module\n" + 
+				"-S          | Stop all Modules"
+			);
+			return;
+		}
+	}
 }

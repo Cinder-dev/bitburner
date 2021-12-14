@@ -4,6 +4,7 @@ let isRunning = false;
 
 /** @param {NS} ns **/
 export async function main(ns) {
+	ns.disableLog("ALL");
 	if (isRunning) {
 		ns.tprint("Command Center already running.");
 		return;
@@ -26,12 +27,24 @@ class CommandCenter {
 		this.running = true;
 	}
 
+	async postStatus() {
+		// Purge old data
+		let pull = ""
+		do { pull = ns.readPort(1); } while (pull != "NULL PORT DATA");
+		let status = JSON.stringify({
+			modules: {
+				running: this.modules.map(module => module.name),
+			}
+		});
+		await this.ns.writePort(10, status);
+	}
+
 	async start() {
 		while(this.running) {
 			for (const module of this.modules) {
 				await module.update();
 			}
-			await this.ns.sleep(1000);
+			await this.ns.sleep(100);
 		}
 		
 		for (const module of this.modules) {

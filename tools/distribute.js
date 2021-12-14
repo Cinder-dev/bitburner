@@ -52,6 +52,8 @@ function rootServer(ns, target) {
 	let hacks = [
 		{ hack: "BruteSSH.exe", func: (ns, target) => ns.brutessh(target) },
 		{ hack: "FTPCrack.exe", func: (ns, target) => ns.ftpcrack(target) },
+		{ hack: "HTTPWorm.exe", func: (ns, target) => ns.httpworm(target) },
+		{ hack: "relaySMTP.exe", func: (ns, target) => ns.relaysmtp(target) },
 	];
 
 	hacks.forEach(hack => {

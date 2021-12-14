@@ -20,7 +20,7 @@ export async function main(ns) {
 
 	spawnWorkers(ns);
 
-    while(true) {
+	while(true) {
 		let pull = ""
 		do { pull = ns.readPort(1); } while (pull != "NULL PORT DATA");
 		serverInfo = ns.getServer(target);
