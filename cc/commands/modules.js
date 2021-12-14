@@ -19,7 +19,9 @@ export async function main(ns) {
 		return;
 	}
 
-	const status = JSON.parse(ns.readPort(10));
+	const data = ns.readPort(10);
+	ns.print(data);
+	const status = JSON.parse(data);
 
 	switch (ns.args[0]) {
 		case "-l": {
