@@ -38,10 +38,8 @@ export class StatusModule extends Module {
 		this.rightColumn = this.doc.getElementById("overview-extra-hook-1");
 	}
 
-	async update(command) {
-		const raw = this.ns.peek(1);
-		if (raw === "NULL PORT DATA") return;
-		const status = JSON.parse(raw);
+	async update(command, status) {
+		if (status === null) return;
 		const {target, modules} = status;
 
 		try {

@@ -16,7 +16,7 @@ export async function main(ns) {
 	}
 	isRunning = true;
 	const distributionModule = new DistributionModule(ns, ns.args[0]);
-	ns.tail("/cc/distribution/distributionModule.js", "home", ...ns.args);
+	// ns.tail("/cc/distribution/distributionModule.js", "home", ...ns.args);
 	ns.atExit(() => isRunning = false);
 
 	await distributionModule.start();
@@ -31,6 +31,6 @@ export class DistributionModule extends Module {
 		super(ns, "Distribution", port, 100);
 	}
 
-	async update(command) {
+	async update(command, status) {
 	}
 }

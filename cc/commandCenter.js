@@ -21,6 +21,7 @@ export const Modules = [
 	{ name: "Hacknet", script: "/cc/hacknet/hacknetModule.js", threads: 1, port: 3, pid: -1 },
 	{ name: "Distribution", script: "/cc/distribution/distributionModule.js", threads: 1, port: 4, pid: -1 },
 	{ name: "Status", script: "/cc/status/statusModule.js", threads: 1, port: 5, pid: -1 },
+	{ name: "Servers", script: "/cc/servers/serversModule.js", threads: 1, port: 6, pid: -1 },
 ];
 
 class CommandCenter {

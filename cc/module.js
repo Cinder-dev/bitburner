@@ -15,13 +15,20 @@ export class Module {
 
 	async start() {
 		while(this.running) {
-			await this.update(this.ns.readPort(this.port));
-			await this.ns.sleep(100);
+			let raw = this.ns.readPort(this.port);
+			let command = (raw == "NULL PORT DATA" ? null : JSON.parse(raw));
+			raw = this.ns.peek(1);
+			let status = (raw == "NULL PORT DATA" ? null : JSON.parse(raw));
+			await this.update(command, status);
+			await this.ns.sleep(this.interval);
 		}
 	}
 
-	/** @param {string} command Commands issued by the Command Center */
-	async update(command) {
+	/** 
+	 * @param {any | null} command Commands issued by the Command Center
+	 * @param {any | null} status Command Center Status
+	 */
+	async update(command, status) {
 		this.ns.print(`${this.name} Module is not implementing update`);
 	}
 

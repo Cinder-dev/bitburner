@@ -16,7 +16,7 @@ export async function main(ns) {
 	}
 	isRunning = true;
 	const hacknetModule = new HacknetModule(ns, ns.args[0]);
-	ns.tail("/cc/hacknet/hacknetModule.js", "home", ...ns.args);
+	// ns.tail("/cc/hacknet/hacknetModule.js", "home", ...ns.args);
 	ns.atExit(() => isRunning = false);
 
 	await hacknetModule.start();
@@ -31,6 +31,6 @@ export class HacknetModule extends Module {
 		super(ns, "Hacknet", port, 100);
 	}
 
-	async update(command) {
+	async update(command, status) {
 	}
 }

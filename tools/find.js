@@ -1,4 +1,4 @@
-function scan(ns, parent, server, target, route) {
+export function scan(ns, parent, server, target, route) {
 	const children = ns.scan(server);
 
 	for (const child of children) {
