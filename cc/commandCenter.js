@@ -39,6 +39,8 @@ class CommandCenter {
 			if (raw == "NULL PORT DATA") continue;
 			let {command, data} = JSON.parse(raw);
 
+			this.ns.print(`[INPUT] ${command}`);
+
 			switch(command) {
 				case "target": {
 					this.target = data.newTarget

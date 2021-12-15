@@ -32,7 +32,5 @@ export class DistributionModule extends Module {
 	}
 
 	async update(command) {
-		this.ns.clearLog();
-		this.ns.print(`Command: ${command}`);
 	}
 }

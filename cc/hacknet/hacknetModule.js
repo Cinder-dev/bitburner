@@ -32,7 +32,5 @@ export class HacknetModule extends Module {
 	}
 
 	async update(command) {
-		this.ns.clearLog();
-		this.ns.print(`Command: ${command}`);
 	}
 }
