@@ -70,6 +70,12 @@ class CommandCenter {
 		await this.ns.writePort(1, status);
 	}
 
+	async postTargetServer() {
+		this.ns.getPortHandle(19).clear();
+		let serverInfo = ns.getServer(this.target);
+		await ns.writePort(19, JSON.stringify(serverInfo));
+	}
+
 	async start() {
 		for (const module of this.modules) {
 			module.pid = this.ns.run(module.script, module.threads, module.port);
@@ -78,6 +84,9 @@ class CommandCenter {
 		while(this.running) {
 			await this.postStatus();
 			await this.pullCommands();
+
+			await this.postTargetServer();
+
 			await this.ns.sleep(100);
 		}
 		

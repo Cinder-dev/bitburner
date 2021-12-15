@@ -1,10 +1,10 @@
+import {getAllServers} from "/util/lists.js";
+
 /** @param {NS} ns **/
 export async function main(ns) {
-	if (ns.args[0] === null || !ns.serverExists(ns.args[0])) return;
 	killAll(ns);
 
-	ns.tprint("Replicating Code to Servers.")
-    ns.run("/tools/replicate.js", 1, "ALL");
+  ns.run("/tools/replicate.js", 1, "ALL");
 
 	await ns.sleep(2000);
 
@@ -13,33 +13,17 @@ export async function main(ns) {
 
 /** @param {NS} ns **/
 function startAll(ns) {
-	ns.scan("home").forEach(host => _startAll(ns, "home", host));
-}
-
-/** @param {NS} ns **/
-function _startAll(ns, root, target) {
-	ns.print("Starting all processes on " + target)
-	if (!ns.hasRootAccess(target)) {
-		rootServer(ns, target);
-	}
-	ns.exec("/hacks/master.js", target, 1, ns.args[0]);
-	ns.scan(target)
-		.filter(host => host !== root)
-		.forEach(host => _startAll(ns, target, host));
+	getAllServers(ns).forEach(hostname => {
+		if (!ns.hasRootAccess(hostname)) {
+			rootServer(ns, hostname);
+		}
+		spawnWorkers(ns, hostname);
+	});
 }
 
 /** @param {NS} ns **/
 function killAll(ns) {
-	ns.scan("home").forEach(host => _killAll(ns, "home", host));
-}
-
-/** @param {NS} ns **/
-function _killAll(ns, root, target) {
-	ns.print("Killing all processes on " + target)
-	ns.killall(target);
-	ns.scan(target)
-		.filter(host => host !== root)
-		.forEach(host => _killAll(ns, target, host));
+	getAllServers(ns).forEach(hostname => ns.killAll(hostname));
 }
 
 /** 
@@ -71,4 +55,17 @@ function rootServer(ns, target) {
 		return true;
 	} 
 	return false;
+}
+
+/** 
+ * @param {NS} ns 
+ * @param {string} target 
+ **/
+ function spawnWorkers(ns, hostname) {
+	let hostInfo = ns.getServer(hostname)
+	let freeMemory = hostInfo.maxRam - hostInfo.ramUsed;
+	let scriptReq = ns.getScriptRam("/hacks/worker.js");
+	let threads = Math.floor(freeMemory / scriptReq);
+	ns.toast(hostname + ": Starting Workers with " + threads + " threads");
+	ns.exec("/hacks/worker.js", hostname, threads);
 }

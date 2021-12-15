@@ -5,7 +5,7 @@ export function autocomplete(data, args) {
 /** @param {NS} ns **/
 export async function main(ns) {
 	if (ns.args[0] === null) return;
-	let files = ["/hacks/master.js", "/hacks/worker.js"];
+	let files = ["/hacks/worker.js"];
 	if (ns.args[0] === "ALL") {
 		for (let host of ns.scan("home")) {
 			await replicate(ns, files, "home", host);
