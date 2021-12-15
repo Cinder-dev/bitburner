@@ -54,6 +54,7 @@ function rootServer(ns, target) {
 		{ hack: "FTPCrack.exe", func: (ns, target) => ns.ftpcrack(target) },
 		{ hack: "HTTPWorm.exe", func: (ns, target) => ns.httpworm(target) },
 		{ hack: "relaySMTP.exe", func: (ns, target) => ns.relaysmtp(target) },
+		{ hack: "SQLInject.exe", func: (ns, target) => ns.sqlinject(target) },
 	];
 
 	hacks.forEach(hack => {

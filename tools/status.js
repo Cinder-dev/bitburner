@@ -16,11 +16,13 @@ export async function main(ns) {
 	servers.sort(LevelSort);
 
 	ns.print(table(
-		["Lv", "Hostname", "R", "P", "Cur $", "Max $", "Security", "Growth", "Hack Time", "Grow Time", "Weaken Time", "Hack Chance"],
+		["Lv", "Hostname", "R", "P", "Memory", "Usage", "Cur $", "Max $", "Security", "Growth", "Hack Time", "Grow Time", "Weaken Time", "Hack Chance"],
 		servers.map(s => `${s.requiredHackingSkill}`),
 		servers.map(s => s.hostname),
 		servers.map(s => s.hasAdminRights ? "Y" : "N"),
 		servers.map(s => `${s.numOpenPortsRequired}`),
+		servers.map(s => `${s.maxRam}GB`),
+		servers.map(s => s.maxRam == 0 ? "-" : `${(s.ramUsed / s.maxRam * 100).toFixed(0)}%`),
 		servers.map(s => s.moneyMax == 0 ? "-" : ns.nFormat(s.moneyAvailable, MoneyFormat)),
 		servers.map(s => s.moneyMax == 0 ? "-" : ns.nFormat(s.moneyMax, MoneyFormat)),
 		servers.map(s => s.moneyMax == 0 ? "-" : `${s.minDifficulty.toFixed(1)}/${s.hackDifficulty.toFixed(1)}`),

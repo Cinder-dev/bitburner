@@ -50,10 +50,10 @@ export class StatusModule extends Module {
 
 			function row(l, r) { left.push(l); right.push(r); }
 
-			row("Progression", "---");
+			row("_Progression", "---");
 			row("Hacks", Hacks.map(hack => this.ns.fileExists(hack, "home") ? 1 : 0).reduce((a, b) => a + b));
 
-			row("Hacking", "---");
+			row("_Hacking", "---");
 
 			// Add current Target
 			row("Target", target.hostname);
