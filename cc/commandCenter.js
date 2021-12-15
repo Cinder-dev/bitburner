@@ -72,8 +72,8 @@ class CommandCenter {
 
 	async postTargetServer() {
 		this.ns.getPortHandle(19).clear();
-		let serverInfo = ns.getServer(this.target);
-		await ns.writePort(19, JSON.stringify(serverInfo));
+		let serverInfo = this.ns.getServer(this.target);
+		await this.ns.writePort(19, JSON.stringify(serverInfo));
 	}
 
 	async start() {

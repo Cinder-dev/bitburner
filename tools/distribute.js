@@ -23,7 +23,7 @@ function startAll(ns) {
 
 /** @param {NS} ns **/
 function killAll(ns) {
-	getAllServers(ns).forEach(hostname => ns.killAll(hostname));
+	getAllServers(ns).forEach(hostname => ns.killall(hostname));
 }
 
 /** 
@@ -64,8 +64,9 @@ function rootServer(ns, target) {
  function spawnWorkers(ns, hostname) {
 	let hostInfo = ns.getServer(hostname)
 	let freeMemory = hostInfo.maxRam - hostInfo.ramUsed;
+	if (freeMemory < 4) return;
 	let scriptReq = ns.getScriptRam("/hacks/worker.js");
 	let threads = Math.floor(freeMemory / scriptReq);
 	ns.toast(hostname + ": Starting Workers with " + threads + " threads");
-	ns.exec("/hacks/worker.js", hostname, threads);
+	ns.exec("/hacks/worker.js", hostname, threads, threads);
 }

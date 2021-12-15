@@ -53,8 +53,9 @@ export class ServersModule extends Module {
 
 		this.ns.clearLog();
 		this.ns.print(table(
-			["Hostname", "Action", "Time Left"],
+			["Hostname", "T", "Action", "Time Left", "Last Job Result"],
 			this.servers.map(s => s.hostname),
+			this.servers.map(s => `{s.threads}`),
 			this.servers.map(s => s.action),
 			this.servers.map(s => {
 				let finishTime = 0
@@ -74,6 +75,7 @@ export class ServersModule extends Module {
 				}
 				return this.ns.nFormat((finishTime - now) / 1000, '00:00:00');
 			}),
+			this.servers.map(s => s.lastMsg),
 		));
 	}
 
