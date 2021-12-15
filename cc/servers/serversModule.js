@@ -1,5 +1,6 @@
 import { Module } from '/cc/module.js';
 import { getAllServers } from '/util/lists.js';
+import { table } from '/util/table.js';
 
 let isRunning = false;
 
@@ -41,27 +42,53 @@ export class ServersModule extends Module {
 		
 		let handle = this.ns.getPortHandle(this.updatePort);
 		while(!handle.empty()) {
-			let data = this.ns.readPort(this.updatePort);
-			let info = JSON.parse(data);
+			const data = this.ns.readPort(this.updatePort);
+			const info = JSON.parse(data);
+			const { hostname, action, startTime } = info;
 
-			this.servers[info.hostname].action = info.action;
+			this.servers.filter(i => i.hostname == hostname)[0].action = action;
+			this.servers.filter(i => i.hostname == hostname)[0].startTime = startTime;
 		}
 
+		let now = Date.now();
+		let growTime = this.ns.getGrowTime(status.target.hostname);
+		let weakenTime = this.ns.getWeakenTime(status.target.hostname);
+		let hackTime = this.ns.getHackTime(status.target.hostname);
+
 		this.ns.clearLog();
-		this.ns.print(this.servers.map(s => `${s.hostname}: ${s.action}`).join("\n"));
+		this.ns.print(table(
+			["Hostname", "Action", "Progress"],
+			this.servers.map(s => s.hostname),
+			this.servers.map(s => s.action),
+			this.servers.map(s => {
+				switch(s.action) {
+					case "Grow":
+						let finishTime = s.startTime + growTime;
+						return `${now / finishTime}`
+					case "Weaken": 
+						let finishTime = s.startTime + weakenTime;
+						return `${now / finishTime}`
+					case "Hack":
+						let finishTime = s.startTime + hackTime;
+						return `${now / finishTime}`
+					default: return 'N/A';
+				}
+			}),
+		));
 	}
 
 	getUsefullServers() {
 		let hostnames = getAllServers(this.ns);
 		let servers = hostnames.map(hostname => this.ns.getServer(hostname))
 			.filter(s => s.hasAdminRights)
-			.filter(s => s.maxRam != 0);
+			.filter(s => s.maxRam > 4);
 		servers.forEach(s => {
-			if (this.servers[s.hostname] == null) {
-				this.servers[s.hostname] = {
+			if (this.servers.filter(i => i.hostname == s.hostname).length == 0) {
+				this.servers.push({
 					hostname: s.hostname,
 					action: "Unknown",
-				}
+					startTime: Date.now(),
+				});
 			}
 		});
 	}
