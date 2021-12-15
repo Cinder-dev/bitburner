@@ -19,6 +19,7 @@ const files = [
     "/tools/serverCost.js",
     "/tools/status.js",
     "/util/lists.js",
+    "/util/table.js",
 ];
 
 /** {NS} ns Scripting Runtime */
