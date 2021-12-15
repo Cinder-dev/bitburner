@@ -58,7 +58,7 @@ export class StatusModule extends Module {
 
 	async update(command, status) {
 		if (status === null) return;
-		const {target, modules} = status;
+		const {target, servers} = status;
 
 		try {
 			const left = [];
@@ -66,16 +66,21 @@ export class StatusModule extends Module {
 
 			function row(l, r) { left.push(l); right.push(r); }
 
-			row("_Progression", "---");
+			row("- Current -", "---");
+			row("Uptime", this.ns.nFormat(this.ns.getPlayer().playtimeSinceLastAug / 1000, TimeFormat))
 			row("Hacks", Hacks.map(hack => this.ns.fileExists(hack, "home") ? 1 : 0).reduce((a, b) => a + b));
 
-			row("_Hacking", "---");
+			row("- Hacknet -", "---")
+			row("Nodes", this.ns.hacknet.numNodes())
+			row("Production", this.ns.nFormat(Array(this.ns.hacknet.numNodes()).fill(0).map((v, i) => this.ns.hacknet.getNodeStats(i).production).reduce((a, b) => a + b), MoneyFormat));
 
+			row("- Hacking -", "---");
 			// Add current Target
 			row("Target", target.hostname);
 			const {moneyAvailable, moneyMax} = target.server;
 			const percentage = (moneyAvailable / moneyMax * 100).toFixed(0);
-			row("Money", `${this.ns.nFormat(moneyAvailable, MoneyFormat)}/${this.ns.nFormat(moneyMax, MoneyFormat)} ${percentage}%`);
+			row("Money", `${this.ns.nFormat(moneyAvailable, MoneyFormat)} ${percentage}%`);
+			row("Max", this.ns.nFormat(moneyMax, MoneyFormat))
 			const {minDifficulty, hackDifficulty} = target.server;
 			row("Security", `${minDifficulty.toFixed(2)}/${hackDifficulty.toFixed(2)}`);
 			row("Growth", target.server.serverGrowth);
@@ -83,6 +88,12 @@ export class StatusModule extends Module {
 			row("Grow Time", this.ns.nFormat(this.ns.getGrowTime(target.hostname) / 1000, TimeFormat))
 			row("Weaken Time", this.ns.nFormat(this.ns.getWeakenTime(target.hostname) / 1000, TimeFormat))
 			row("Hack Chance", `${(this.ns.hackAnalyzeChance(target.hostname) * 100).toFixed(2)}%`)
+
+			row("- Workers -", "---")
+			row("Weakening", servers.filter(s => this.ns.serverExists(s.hostname) && this.ns.hasRootAccess(s.hostname) && s.action === "Weaken").length)
+			row("Growing", servers.filter(s => this.ns.serverExists(s.hostname) && this.ns.hasRootAccess(s.hostname) && s.action === "Grow").length)
+			row("Hacking", servers.filter(s => this.ns.serverExists(s.hostname) && this.ns.hasRootAccess(s.hostname) && s.action === "Hack").length)
+
 
 			this.leftColumn.innerText = left.join(" \n");
 			this.rightColumn.innerText = right.join("\n");

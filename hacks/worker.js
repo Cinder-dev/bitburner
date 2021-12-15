@@ -1,12 +1,12 @@
 /** @param {NS} ns **/
 export async function main(ns) {
 	ns.disableLog("ALL");
+	let host = ns.getHostname();
+
+	ns.print(`Starting Worker on ${host}`);
 
 	let lastMsg = "N/A";
-
 	while(true) {
-		let host = ns.getHostname();
-
 		let raw = ns.peek(1);
 		if (raw === "NULL PORT DATA") {
 			await ns.sleep(1000);

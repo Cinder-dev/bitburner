@@ -11,7 +11,7 @@ export async function main(ns) {
 	}
 	isRunning = true;
 	const commandCenter = new CommandCenter(ns);
-	ns.tail("/cc/commandCenter.js", "home");
+	// ns.tail("/cc/commandCenter.js", "home");
 	ns.atExit(() => isRunning = false);
 
 	await commandCenter.start();
@@ -31,6 +31,7 @@ class CommandCenter {
 		this.modules = [...Modules];
 		this.servers = [];
 		this.target = "n00dles";
+		this.stock = false;
 		this.running = true;
 
 		this.readState(ns);
@@ -41,12 +42,14 @@ class CommandCenter {
 		if (raw == "") return;
 		let state = JSON.parse(raw);
 		this.target = state.target;
-		this.servers = state.servers;
+		this.servers = (state.servers === undefined ? [] : state.servers);
+		this.stock = state.stock;
 	}
 
 	async writeState() {
 		let state = JSON.stringify({
 			target: this.target,
+			stock: this.stock,
 			servers: this.servers,
 		});
 		await this.ns.write("/cc/state.txt", state, "w");
@@ -63,7 +66,8 @@ class CommandCenter {
 
 			switch(command) {
 				case "target": {
-					this.target = data.newTarget
+					this.target = data.newTarget;
+					this.stock = data.stock;
 					break;
 				}
 				case "task": {
@@ -76,7 +80,7 @@ class CommandCenter {
 					this.ns.toast("CC: Unknown Command Recieved", "warning")
 				}
 			}
-		} while (raw != "NULL PORT DATA");
+		} while (raw !== "NULL PORT DATA");
 	}	
 
 	async postStatus() {
@@ -85,6 +89,7 @@ class CommandCenter {
 			target: {
 				hostname: this.target,
 				server: this.ns.getServer(this.target),
+				stock: this.stock,
 			},
 			servers: this.servers,
 			modules: {
@@ -97,7 +102,7 @@ class CommandCenter {
 	async findServers() {
 		getAllServers(this.ns)
 			.map(h => this.ns.getServer(h))
-			.filter(s => s.hasAdminRights && s.maxRam > 4)
+			.filter(s => s.hasAdminRights && s.maxRam >= 4)
 			.filter(s => this.servers.find(t => t.hostname === s.hostname) === undefined)
 			.forEach(s => {
 				this.servers.push({

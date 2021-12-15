@@ -1,9 +1,15 @@
 /** @param {NS} ns **/
 export async function main(ns) {
-	if (ns.args[0] === null || ns.args[0] % 2 !== 0) return;
-    let mem = ns.args[0];
+	let {mem, count} = ns.flags([
+		["mem", 0],
+		["count", 0]
+	]);
 
-	if(await ns.prompt(`Purchase a ${mem}GB server for ${ns.nFormat(ns.getPurchasedServerCost(mem), '($0a)')}`)) {
-		ns.purchaseServer("private", mem);
+	if (mem === 0 || count === 0) return;
+
+	if(await ns.prompt(`Purchase ${count} ${mem}GB server(s) for ${ns.nFormat(count * ns.getPurchasedServerCost(mem), '($0a)')}`)) {
+		for (let i = 0; i < count; i++) {
+			ns.purchaseServer("private", mem);
+		}
 	}
 }

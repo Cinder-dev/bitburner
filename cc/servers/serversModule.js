@@ -54,11 +54,16 @@ export class ServersModule extends Module {
 		this.ns.clearLog();
 
 		if (this.servers.length > 0) {
+			this.servers.sort((a, b) => a.threads - b.threads);
 			this.ns.print(table(
 				["Hostname", "T", "Action", "Current", "Progress", "Bar", "Time Left", "Last Job Result"],
 				this.servers.map(s => s.hostname),
 				this.servers.map(s => `${s.threads}`),
-				this.servers.map(s => status.servers.find(t => t.hostname == s.hostname).action),
+				this.servers.map(s => {
+					let server = status.servers.find(t => t.hostname == s.hostname);
+					if (server === undefined) return "Loading";
+					return server.action;
+				}),
 				this.servers.map(s => s.action),
 				this.servers.map(s => {
 					let finishTime = s.startTime + s.runTime;
@@ -93,7 +98,7 @@ export class ServersModule extends Module {
 		let hostnames = getAllServers(this.ns);
 		let servers = hostnames.map(hostname => this.ns.getServer(hostname))
 			.filter(s => s.hasAdminRights)
-			.filter(s => s.maxRam > 4);
+			.filter(s => s.maxRam >= 4);
 		servers.forEach(s => {
 			if (this.servers.filter(i => i.hostname === s.hostname).length === 0) {
 				this.servers.push({

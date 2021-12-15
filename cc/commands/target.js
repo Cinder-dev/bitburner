@@ -7,18 +7,17 @@ export async function main(ns) {
 		ns.tprint("Command Center is not running")
 		return;
 	}
-	if (ns.args.length < 1) {
-		// No arguments, show usage.
-		ns.tprint("No arguments supplied, usage: target [target]");
-		return;
-	}
 
-	let target = ns.args[0];
-	if (ns.serverExists(target)) {
+	let {_, stock } = ns.flags([
+		["stock", false],
+	]);
+
+	if (ns.serverExists(_[0])) {
 		await ns.writePort(2, JSON.stringify({
 			command: "target",
 			data: {
-				newTarget: target
+				newTarget: _[0],
+				stock: stock,
 			}
 		}));
 	}
