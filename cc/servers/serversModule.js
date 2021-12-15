@@ -52,31 +52,40 @@ export class ServersModule extends Module {
 		let now = Date.now();
 
 		this.ns.clearLog();
-		this.ns.print(table(
-			["Hostname", "T", "Action", "Time Left", "Last Job Result"],
-			this.servers.map(s => s.hostname),
-			this.servers.map(s => `{s.threads}`),
-			this.servers.map(s => s.action),
-			this.servers.map(s => {
-				let finishTime = 0
-				switch(s.action) {
-					case "Grow":
-						finishTime = s.startTime + s.growTime;
-						break;
-					case "Weaken": 
-						finishTime = s.startTime + s.weakenTime;
-						break;
-					case "Hack":
-						finishTime = s.startTime + s.hackTime;
-						break;
-					default: 
-						finishTime = Date.now();
-						break;
-				}
-				return this.ns.nFormat((finishTime - now) / 1000, '00:00:00');
-			}),
-			this.servers.map(s => s.lastMsg),
-		));
+
+		if (this.servers.length > 0) {
+			this.ns.print(table(
+				["Hostname", "T", "Action", "Progress", "Bar", "Time Left", "Last Job Result"],
+				this.servers.map(s => s.hostname),
+				this.servers.map(s => `${s.threads}`),
+				this.servers.map(s => s.action),
+				this.servers.map(s => {
+					let finishTime = s.startTime + s.runTime;
+					let timeRemaining = finishTime - now;
+					let percentage = (s.runTime - timeRemaining) / s.runTime;
+					return (percentage * 100).toFixed(1) + "%";
+				}),
+				this.servers.map(s => {
+					let finishTime = s.startTime + s.runTime;
+					let timeRemaining = finishTime - now;
+					let percentage = (s.runTime - timeRemaining) / s.runTime;
+					let fill = Math.round(20 * percentage);
+					let drain = Math.round(20 * (1 - percentage));
+					if (isNaN(fill) || isNaN(drain) || !isFinite(fill) || !isFinite(drain) || fill < 0 || drain < 0) return "_".repeat(20);
+					try {
+						return ("=".repeat(fill) + "_".repeat(drain));
+					} catch(err) {
+						console.log(fill + " " + drain);
+						return "_".repeat(20);
+					}
+				}),
+				this.servers.map(s => {
+					let finishTime = s.startTime + s.runTime;
+					return this.ns.nFormat((finishTime - now) / 1000, '00:00:00');
+				}),
+				this.servers.map(s => s.lastMsg),
+			));
+		}
 	}
 
 	getUsefullServers() {
@@ -87,6 +96,9 @@ export class ServersModule extends Module {
 		servers.forEach(s => {
 			if (this.servers.filter(i => i.hostname == s.hostname).length == 0) {
 				this.servers.push({
+					threads: 0,
+					runTime: 0,
+					lastMsg: "",
 					hostname: s.hostname,
 					action: "Unknown",
 					startTime: Date.now(),

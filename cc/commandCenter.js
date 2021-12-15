@@ -31,6 +31,20 @@ class CommandCenter {
 		this.modules = [...Modules];
 		this.target = "n00dles";
 		this.running = true;
+
+		this.readState(ns);
+	}
+
+	readState() {
+		let raw = this.ns.read("/cc/state.txt");
+		if (raw == "") return;
+		let state = JSON.parse(raw);
+		this.target = state.target;
+	}
+
+	async writeState() {
+		let state = JSON.stringify({ target: this.target });
+		await this.ns.write("/cc/state.txt", state, "w");
 	}
 
 	async pullCommands() {
@@ -87,6 +101,7 @@ class CommandCenter {
 
 			await this.postTargetServer();
 
+			await this.writeState()
 			await this.ns.sleep(100);
 		}
 		
