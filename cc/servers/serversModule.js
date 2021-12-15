@@ -44,35 +44,35 @@ export class ServersModule extends Module {
 		while(!handle.empty()) {
 			const data = this.ns.readPort(this.updatePort);
 			const info = JSON.parse(data);
-			const { hostname, action, startTime } = info;
 
-			this.servers.filter(i => i.hostname == hostname)[0].action = action;
-			this.servers.filter(i => i.hostname == hostname)[0].startTime = startTime;
+			let index = this.servers.findIndex(i => i.hostname == info.hostname);
+			this.servers[index] = info;
 		}
 
 		let now = Date.now();
-		let growTime = this.ns.getGrowTime(status.target.hostname);
-		let weakenTime = this.ns.getWeakenTime(status.target.hostname);
-		let hackTime = this.ns.getHackTime(status.target.hostname);
 
 		this.ns.clearLog();
 		this.ns.print(table(
-			["Hostname", "Action", "Progress"],
+			["Hostname", "Action", "Time Left"],
 			this.servers.map(s => s.hostname),
 			this.servers.map(s => s.action),
 			this.servers.map(s => {
+				let finishTime = 0
 				switch(s.action) {
 					case "Grow":
-						let finishTime = s.startTime + growTime;
-						return `${now / finishTime}`
+						finishTime = s.startTime + s.growTime;
+						break;
 					case "Weaken": 
-						let finishTime = s.startTime + weakenTime;
-						return `${now / finishTime}`
+						finishTime = s.startTime + s.weakenTime;
+						break;
 					case "Hack":
-						let finishTime = s.startTime + hackTime;
-						return `${now / finishTime}`
-					default: return 'N/A';
+						finishTime = s.startTime + s.hackTime;
+						break;
+					default: 
+						finishTime = Date.now();
+						break;
 				}
+				return this.ns.nFormat((finishTime - now) / 1000, '00:00:00');
 			}),
 		));
 	}

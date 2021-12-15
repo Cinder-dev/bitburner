@@ -1,3 +1,5 @@
+const MaxReducer = (a, b) => a > b ? a : b;
+
 /**
  * Create a Table display of the provided data
  * @param {string[]} headers Column Headers

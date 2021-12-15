@@ -1,7 +1,6 @@
 import { getAllServers } from '/util/lists.js';
 import { table } from '/util/table.js';
 
-const MaxReducer = (a, b) => a > b ? a : b;
 const LevelSort = (a, b) => a.requiredHackingSkill - b.requiredHackingSkill;
 
 const MoneyFormat = '$0.0a';
