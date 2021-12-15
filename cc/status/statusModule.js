@@ -21,7 +21,8 @@ export async function main(ns) {
 	await statusModule.start();
 }
 
-const MoneyFormat = '$0.000a';
+const MoneyFormat = '$0.0a';
+const TimeFormat = '0:00:00';
 
 export class StatusModule extends Module {
 	/** 
@@ -36,8 +37,9 @@ export class StatusModule extends Module {
 	}
 
 	async update(command) {
-		const status = this.ns.peek(1);
-		if (status === "NULL PORT DATA") return;
+		const raw = this.ns.peek(1);
+		if (raw === "NULL PORT DATA") return;
+		const status = JSON.parse(raw);
 		const {target, modules} = status;
 
 		try {
@@ -46,23 +48,25 @@ export class StatusModule extends Module {
 
 			function row(l, r) { left.push(l); right.push(r); }
 
+			row("---", "---");
+
 			// Add current Target
 			row("Target", target.hostname);
 			const {moneyAvailable, moneyMax} = target.server;
-			const percentage = (moneyAvailable / moneyMax * 100).toFixed(2);
+			const percentage = (moneyAvailable / moneyMax * 100).toFixed(0);
 			row("Money", `${this.ns.nFormat(moneyAvailable, MoneyFormat)}/${this.ns.nFormat(moneyMax, MoneyFormat)} ${percentage}%`);
 			const {minDifficulty, hackDifficulty} = target.server;
 			row("Security", `${minDifficulty.toFixed(2)}/${hackDifficulty.toFixed(2)}`);
 			row("Growth", target.server.serverGrowth);
-			row("Hack Time", this.ns.tFormat(this.ns.getHackTime(target.hostname)))
-			row("Grow Time", this.ns.tFormat(this.ns.getGrowTime(target.hostname)))
-			row("Weaken Time", this.ns.tFormat(this.ns.getWeakenTime(target.hostname)))
+			row("Hack Time", this.ns.nFormat(this.ns.getHackTime(target.hostname), TimeFormat))
+			row("Grow Time", this.ns.nFormat(this.ns.getGrowTime(target.hostname), TimeFormat))
+			row("Weaken Time", this.ns.nFormat(this.ns.getWeakenTime(target.hostname), TimeFormat))
 			row("Hack Chance", `${(this.ns.hackAnalyzeChance(target.hostname) * 100).toFixed(2)}%`)
 
 			this.leftColumn.innerText = left.join(" \n");
 			this.rightColumn.innerText = right.join("\n");
 		} catch (err) {
-			ns.print("Error: Update Skipped - " + String(err));
+			this.ns.print("Error: Update Skipped - " + String(err));
 		}
 	}
 }
