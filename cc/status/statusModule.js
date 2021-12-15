@@ -58,9 +58,9 @@ export class StatusModule extends Module {
 			const {minDifficulty, hackDifficulty} = target.server;
 			row("Security", `${minDifficulty.toFixed(2)}/${hackDifficulty.toFixed(2)}`);
 			row("Growth", target.server.serverGrowth);
-			row("Hack Time", this.ns.nFormat(this.ns.getHackTime(target.hostname), TimeFormat))
-			row("Grow Time", this.ns.nFormat(this.ns.getGrowTime(target.hostname), TimeFormat))
-			row("Weaken Time", this.ns.nFormat(this.ns.getWeakenTime(target.hostname), TimeFormat))
+			row("Hack Time", this.ns.nFormat(this.ns.getHackTime(target.hostname) / 1000, TimeFormat))
+			row("Grow Time", this.ns.nFormat(this.ns.getGrowTime(target.hostname) / 1000, TimeFormat))
+			row("Weaken Time", this.ns.nFormat(this.ns.getWeakenTime(target.hostname) / 1000, TimeFormat))
 			row("Hack Chance", `${(this.ns.hackAnalyzeChance(target.hostname) * 100).toFixed(2)}%`)
 
 			this.leftColumn.innerText = left.join(" \n");
