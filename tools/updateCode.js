@@ -16,6 +16,7 @@ const files = [
     "/tools/replicate.js",
     "/tools/serverCost.js",
     "/tools/status.js",
+    "/util/lists.js",
 ];
 
 /** {NS} ns Scripting Runtime */

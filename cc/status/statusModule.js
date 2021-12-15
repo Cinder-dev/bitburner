@@ -24,6 +24,8 @@ export async function main(ns) {
 const MoneyFormat = '$0.0a';
 const TimeFormat = '0:00:00';
 
+const Hacks = ["BruteSSH.exe", "FTPCrack.exe", "relaySMTP.exe", "HTTPWorm.exe", "SQLInject.exe"];
+
 export class StatusModule extends Module {
 	/** 
 	 * @param {NS} ns Scripting Runtime
@@ -48,7 +50,10 @@ export class StatusModule extends Module {
 
 			function row(l, r) { left.push(l); right.push(r); }
 
-			row("---", "---");
+			row("Progression", "---");
+			row("Hacks", Hacks.map(hack => this.ns.fileExists(hack, "home") ? 1 : 0).reduce((a, b) => a + b));
+
+			row("Hacking", "---");
 
 			// Add current Target
 			row("Target", target.hostname);
