@@ -4,6 +4,7 @@ const files = [
     "/cc/commands/modules.js",
     "/cc/distribution/distributionModule.js",
     "/cc/hacknet/hacknetModule.js",
+    "/cc/status/statusModule.js",
     "/cc/commandCenter.js",
     "/cc/module.js",
     "/hacks/master.js",

@@ -28,10 +28,11 @@ export class DistributionModule extends Module {
 	 * @param {number} port command port
 	 */
 	constructor(ns, port) {
-		super(ns, "Distribution", port);
+		super(ns, "Distribution", port, 100);
 	}
 
 	async update(command) {
+		this.ns.clearLog();
 		this.ns.print(`Command: ${command}`);
 	}
 }
