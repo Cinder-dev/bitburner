@@ -1,4 +1,4 @@
-import { HacknetModule } from '/cc/hacknet/hacknetModule.js';
+import { getAllServers } from '/util/lists.js';
 
 let isRunning = false;
 
@@ -29,6 +29,7 @@ class CommandCenter {
 	constructor(ns) {
 		this.ns = ns;
 		this.modules = [...Modules];
+		this.servers = [];
 		this.target = "n00dles";
 		this.running = true;
 
@@ -40,10 +41,14 @@ class CommandCenter {
 		if (raw == "") return;
 		let state = JSON.parse(raw);
 		this.target = state.target;
+		this.servers = state.servers;
 	}
 
 	async writeState() {
-		let state = JSON.stringify({ target: this.target });
+		let state = JSON.stringify({
+			target: this.target,
+			servers: this.servers,
+		});
 		await this.ns.write("/cc/state.txt", state, "w");
 	}
 
@@ -61,6 +66,12 @@ class CommandCenter {
 					this.target = data.newTarget
 					break;
 				}
+				case "task": {
+					const {server, action} = data;
+					let index = this.servers.findIndex(s => s.hostname === server)
+					this.servers[index].action = action;
+					break;
+				}
 				default: {
 					this.ns.toast("CC: Unknown Command Recieved", "warning")
 				}
@@ -69,14 +80,13 @@ class CommandCenter {
 	}	
 
 	async postStatus() {
-		// Purge old data
-		let pull = ""
-		do { pull = this.ns.readPort(1); } while (pull != "NULL PORT DATA");
+		this.ns.clearPort(1);
 		let status = JSON.stringify({
 			target: {
 				hostname: this.target,
 				server: this.ns.getServer(this.target),
 			},
+			servers: this.servers,
 			modules: {
 				running: this.modules.filter(module => module.pid !== -1).map(module => module.name),
 			}
@@ -84,10 +94,17 @@ class CommandCenter {
 		await this.ns.writePort(1, status);
 	}
 
-	async postTargetServer() {
-		this.ns.getPortHandle(19).clear();
-		let serverInfo = this.ns.getServer(this.target);
-		await this.ns.writePort(19, JSON.stringify(serverInfo));
+	async findServers() {
+		getAllServers(this.ns)
+			.map(h => this.ns.getServer(h))
+			.filter(s => s.hasAdminRights && s.maxRam > 4)
+			.filter(s => this.servers.find(t => t.hostname === s.hostname) === undefined)
+			.forEach(s => {
+				this.servers.push({
+					hostname: s.hostname,
+					action: "Weaken"
+				})
+			});
 	}
 
 	async start() {
@@ -99,7 +116,7 @@ class CommandCenter {
 			await this.postStatus();
 			await this.pullCommands();
 
-			await this.postTargetServer();
+			await this.findServers();
 
 			await this.writeState()
 			await this.ns.sleep(100);

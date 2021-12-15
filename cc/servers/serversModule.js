@@ -30,7 +30,7 @@ export class ServersModule extends Module {
 	 * @param {number} port command port
 	 */
 	constructor(ns, port) {
-		super(ns, "Servers", port, 100);
+		super(ns, "Servers", port, 500);
 		/** @type {NS} ns */
 		this.ns;
 		this.servers = [];
@@ -55,9 +55,10 @@ export class ServersModule extends Module {
 
 		if (this.servers.length > 0) {
 			this.ns.print(table(
-				["Hostname", "T", "Action", "Progress", "Bar", "Time Left", "Last Job Result"],
+				["Hostname", "T", "Action", "Current", "Progress", "Bar", "Time Left", "Last Job Result"],
 				this.servers.map(s => s.hostname),
 				this.servers.map(s => `${s.threads}`),
+				this.servers.map(s => status.servers.find(t => t.hostname == s.hostname).action),
 				this.servers.map(s => s.action),
 				this.servers.map(s => {
 					let finishTime = s.startTime + s.runTime;
@@ -71,12 +72,12 @@ export class ServersModule extends Module {
 					let percentage = (s.runTime - timeRemaining) / s.runTime;
 					let fill = Math.round(20 * percentage);
 					let drain = Math.round(20 * (1 - percentage));
-					if (isNaN(fill) || isNaN(drain) || !isFinite(fill) || !isFinite(drain) || fill < 0 || drain < 0) return "_".repeat(20);
+					if (isNaN(fill) || isNaN(drain) || !isFinite(fill) || !isFinite(drain) || fill < 0 || drain < 0) return "-".repeat(20);
 					try {
-						return ("=".repeat(fill) + "_".repeat(drain));
+						return ("|".repeat(fill) + "-".repeat(drain));
 					} catch(err) {
 						console.log(fill + " " + drain);
-						return "_".repeat(20);
+						return "-".repeat(20);
 					}
 				}),
 				this.servers.map(s => {
@@ -94,7 +95,7 @@ export class ServersModule extends Module {
 			.filter(s => s.hasAdminRights)
 			.filter(s => s.maxRam > 4);
 		servers.forEach(s => {
-			if (this.servers.filter(i => i.hostname == s.hostname).length == 0) {
+			if (this.servers.filter(i => i.hostname === s.hostname).length === 0) {
 				this.servers.push({
 					threads: 0,
 					runTime: 0,

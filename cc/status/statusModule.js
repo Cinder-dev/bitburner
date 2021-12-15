@@ -36,6 +36,24 @@ export class StatusModule extends Module {
 		this.doc = globalThis["document"];
 		this.leftColumn = this.doc.getElementById("overview-extra-hook-0");
 		this.rightColumn = this.doc.getElementById("overview-extra-hook-1");
+
+		let style = this.doc.createElement("style");
+		style.innerHTML = `
+			a { font-size: 12px !important; }
+			p { font-size: 12px !important; }
+			button { 
+				font-size: 12px !important;
+				line-height: 1 !important;
+			}
+			input { font-size: 12px !important; }
+			h1 { font-size: 24px !important; }
+			h2 { font-size: 22px !important; }
+			h3 { font-size: 20px !important; }
+			h4 { font-size: 18px !important; }
+			h5 { font-size: 16px !important; }
+			h6 { font-size: 14px !important; }
+		`;
+		this.doc.getElementsByTagName('head')[0].appendChild(style);
 	}
 
 	async update(command, status) {

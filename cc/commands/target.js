@@ -15,7 +15,7 @@ export async function main(ns) {
 
 	let target = ns.args[0];
 	if (ns.serverExists(target)) {
-		ns.writePort(2, JSON.stringify({
+		await ns.writePort(2, JSON.stringify({
 			command: "target",
 			data: {
 				newTarget: target
