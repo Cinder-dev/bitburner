@@ -9,7 +9,6 @@ const files = [
     "/cc/status/statusModule.js",
     "/cc/commandCenter.js",
     "/cc/module.js",
-    "/hacks/master.js",
     "/hacks/worker.js",
     "/servers/buy.js",
     "/tools/backdoor.js",
