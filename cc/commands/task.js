@@ -8,6 +8,20 @@ export function autocomplete(data, args) {
 	return [...data.servers];
 }
 
+/**
+ * @param {{files, flags, servers}} data
+ * @param {any[]} args
+ */
+export function flags(data, args) {
+	data.flags([
+		["grow", false],
+		["hack", false],
+		["weak", true],
+		["help", false],
+	]);
+	return args[args.length-1]
+}
+
 /** @param {NS} ns Scripting Runtime */
 export async function main(ns) {
 	const { _, grow, hack, weak, help } = ns.flags([

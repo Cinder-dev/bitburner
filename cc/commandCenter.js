@@ -1,6 +1,14 @@
 import { getAllServers } from '/util/lists.js';
+import { flags as taskFlags } from "/cc/commands/task.js";
 
 let isRunning = false;
+
+export function autocomplete(data, args) {
+	data.flags([
+		["start", false]
+	]);
+	return [...taskFlags(data, args)]
+}
 
 /** @param {NS} ns **/
 export async function main(ns) {
@@ -18,10 +26,10 @@ export async function main(ns) {
 }
 
 export const Modules = [
-	{ name: "Hacknet", script: "/cc/hacknet/hacknetModule.js", threads: 1, port: 3, pid: -1 },
-	{ name: "Distribution", script: "/cc/distribution/distributionModule.js", threads: 1, port: 4, pid: -1 },
-	{ name: "Status", script: "/cc/status/statusModule.js", threads: 1, port: 5, pid: -1 },
-	{ name: "Servers", script: "/cc/servers/serversModule.js", threads: 1, port: 6, pid: -1 },
+	{ name: "Hacknet", script: "/cc/modules/hacknet.js", threads: 1, port: 3, pid: -1 },
+	{ name: "Distribution", script: "/cc/modules/distribution.js", threads: 1, port: 4, pid: -1 },
+	{ name: "Status", script: "/cc/modules/status.js", threads: 1, port: 5, pid: -1 },
+	{ name: "Servers", script: "/cc/modules/servers.js", threads: 1, port: 6, pid: -1 },
 ];
 
 class CommandCenter {

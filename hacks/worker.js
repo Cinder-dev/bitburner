@@ -14,6 +14,7 @@ export async function main(ns) {
 		}
 		let status = JSON.parse(raw);
 
+		/** @type {Server} serverInfo */
 		let serverInfo = status.target.server;
 		let action = status.servers.find(s => s.hostname === host).action;
 

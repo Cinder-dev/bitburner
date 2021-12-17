@@ -15,14 +15,14 @@ export async function main(ns) {
 		return;
 	}
 	isRunning = true;
-	const distributionModule = new DistributionModule(ns, ns.args[0]);
-	// ns.tail("/cc/distribution/distributionModule.js", "home", ...ns.args);
+	const distributionModule = new Distribution(ns, ns.args[0]);
+	// ns.tail("/cc/distribution/distribution.js", "home", ...ns.args);
 	ns.atExit(() => isRunning = false);
 
 	await distributionModule.start();
 }
 
-export class DistributionModule extends Module {
+export class Distribution extends Module {
 	/** 
 	 * @param {NS} ns Scripting Runtime
 	 * @param {number} port command port

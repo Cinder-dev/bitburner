@@ -17,14 +17,14 @@ export async function main(ns) {
 		return;
 	}
 	isRunning = true;
-	const serversModule = new ServersModule(ns, ns.args[0]);
-	ns.tail("/cc/servers/serversModule.js", "home", ...ns.args);
+	const serversModule = new Servers(ns, ns.args[0]);
+	ns.tail("/cc/modules/servers.js", "home", ...ns.args);
 	ns.atExit(() => isRunning = false);
 
 	await serversModule.start();
 }
 
-export class ServersModule extends Module {
+export class Servers extends Module {
 	/** 
 	 * @param {NS} ns Scripting Runtime
 	 * @param {number} port command port
@@ -57,22 +57,21 @@ export class ServersModule extends Module {
 			this.servers.sort((a, b) => (a.threads !== b.threads ? (a.threads - b.threads) : a.hostname.localeCompare(b.hostname)));
 
 			this.ns.print(table(
-				["Hostname", "T", "Target", "Action", "Current", "Time Left", "Bar", "Result"],
+				["Hostname", "T", "Target", "Action", "Time Left", "Bar", "Result"],
 				this.servers.map(s => s.hostname),
 				this.servers.map(s => `${s.threads}`),
 				this.servers.map(s => s.target),
 				this.servers.map(s => {
 					let server = status.servers.find(t => t.hostname === s.hostname);
 					if (server === undefined) return "Loading";
-					return server.action;
+					return server.action[0] + " | " + s.action[0];
 				}),
-				this.servers.map(s => s.action),
 				this.servers.map(s => {
 					let finishTime = s.startTime + s.runTime;
 					return this.ns.nFormat((finishTime - now) / 1000, '00:00:00');
 				}),
 				this.servers.map(s => {
-					const BarSize = 40;
+					const BarSize = 20;
 					let finishTime = s.startTime + s.runTime;
 					let timeRemaining = finishTime - now;
 					let percentage = (s.runTime - timeRemaining) / s.runTime;

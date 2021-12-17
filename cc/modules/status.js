@@ -15,7 +15,7 @@ export async function main(ns) {
 		return;
 	}
 	isRunning = true;
-	const statusModule = new StatusModule(ns, ns.args[0]);
+	const statusModule = new Status(ns, ns.args[0]);
 	ns.atExit(() => isRunning = false);
 
 	await statusModule.start();
@@ -26,7 +26,7 @@ const TimeFormat = '0:00:00';
 
 const Hacks = ["BruteSSH.exe", "FTPCrack.exe", "relaySMTP.exe", "HTTPWorm.exe", "SQLInject.exe"];
 
-export class StatusModule extends Module {
+export class Status extends Module {
 	/** 
 	 * @param {NS} ns Scripting Runtime
 	 * @param {number} port command port
@@ -99,8 +99,8 @@ export class StatusModule extends Module {
 			row("Growing", servers.filter(s => this.ns.serverExists(s.hostname) && this.ns.hasRootAccess(s.hostname) && s.action === "Grow").length)
 			row("Hacking", servers.filter(s => this.ns.serverExists(s.hostname) && this.ns.hasRootAccess(s.hostname) && s.action === "Hack").length)
 
-			row("- Factions -", "---")
-			row("Working @", this.ns.getPlayer().currentWorkFactionName)
+			row("- Factions -", "---");
+			row("Working @", this.ns.getPlayer().currentWorkFactionName.padStart(1, ""));
 
 
 			this.leftColumn.innerText = left.join(" \n");
