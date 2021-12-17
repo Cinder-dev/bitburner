@@ -38,20 +38,25 @@ export class StatusModule extends Module {
 		this.rightColumn = this.doc.getElementById("overview-extra-hook-1");
 
 		let style = this.doc.createElement("style");
+		let fontSizeBase = 10;
 		style.innerHTML = `
-			a { font-size: 12px !important; }
-			p { font-size: 12px !important; }
+			a { font-size: ${fontSizeBase}px !important; }
+			p { 
+				font-family: "Fira Mono", "Lucida Console", "Lucida Sans Unicode", Consolas, "Courier New", Courier, monospace, "Times New Roman";
+				font-size: ${fontSizeBase}px !important;
+				line-height: 1.1 !important;
+			}
 			button { 
-				font-size: 12px !important;
+				font-size: ${fontSizeBase}px !important;
 				line-height: 1 !important;
 			}
-			input { font-size: 12px !important; }
-			h1 { font-size: 24px !important; }
-			h2 { font-size: 22px !important; }
-			h3 { font-size: 20px !important; }
-			h4 { font-size: 18px !important; }
-			h5 { font-size: 16px !important; }
-			h6 { font-size: 14px !important; }
+			input { font-size: ${fontSizeBase}px !important; }
+			h1 { font-size: ${fontSizeBase + 12}px !important; }
+			h2 { font-size: ${fontSizeBase + 10}px !important; }
+			h3 { font-size: ${fontSizeBase + 8}px !important; }
+			h4 { font-size: ${fontSizeBase + 6}px !important; }
+			h5 { font-size: ${fontSizeBase + 4}px !important; }
+			h6 { font-size: ${fontSizeBase + 2}px !important; }
 		`;
 		this.doc.getElementsByTagName('head')[0].appendChild(style);
 	}
@@ -93,6 +98,9 @@ export class StatusModule extends Module {
 			row("Weakening", servers.filter(s => this.ns.serverExists(s.hostname) && this.ns.hasRootAccess(s.hostname) && s.action === "Weaken").length)
 			row("Growing", servers.filter(s => this.ns.serverExists(s.hostname) && this.ns.hasRootAccess(s.hostname) && s.action === "Grow").length)
 			row("Hacking", servers.filter(s => this.ns.serverExists(s.hostname) && this.ns.hasRootAccess(s.hostname) && s.action === "Hack").length)
+
+			row("- Factions -", "---")
+			row("Working @", this.ns.getPlayer().currentWorkFactionName)
 
 
 			this.leftColumn.innerText = left.join(" \n");

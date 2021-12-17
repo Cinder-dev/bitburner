@@ -40,8 +40,8 @@ export class HacknetModule extends Module {
 		let nodes = Array(this.ns.hacknet.numNodes()).fill(0);
 
 		this.ns.print(`Nodes: ${nodes.length} of ${this.ns.hacknet.maxNumNodes()}`);
-		this.ns.print(`Total Production: ${this.ns.nFormat(nodes.map((v, i) => this.ns.hacknet.getNodeStats(i).production).reduce((a, b) => a + b), MoneyFormat)} /s`)
-		this.ns.print(`Total Produced: ${this.ns.nFormat(nodes.map((v, i) => this.ns.hacknet.getNodeStats(i).totalProduction).reduce((a, b) => a + b), MoneyFormat)}`)
+		this.ns.print(`Total Production: ${nodes.length === 0 ? "$0 /s" : this.ns.nFormat(nodes.map((v, i) => this.ns.hacknet.getNodeStats(i).production).reduce((a, b) => a + b), MoneyFormat)} /s`)
+		this.ns.print(`Total Produced: ${nodes.length === 0 ? "$0" : this.ns.nFormat(nodes.map((v, i) => this.ns.hacknet.getNodeStats(i).totalProduction).reduce((a, b) => a + b), MoneyFormat)}`)
 		this.ns.print(table(
 			["Node", "Produced", "Uptime", "Production", "Lv", "RAM", "Cores"],
 			nodes.map((v, i) => this.ns.hacknet.getNodeStats(i).name),

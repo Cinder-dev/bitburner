@@ -20,23 +20,23 @@ export async function main(ns) {
 		let growTime = ns.getGrowTime(serverInfo.hostname);
 		let weakenTime = ns.getWeakenTime(serverInfo.hostname);
 		let hackTime = ns.getHackTime(serverInfo.hostname);
-		let data = { threads: ns.args[0], hostname: host, startTime: Date.now(), lastMsg: lastMsg };
+		let data = { threads: ns.args[0], hostname: host, target: serverInfo.hostname, startTime: Date.now(), lastMsg: lastMsg };
 
 		switch (action) {
 			case "Weaken":
 				await ns.tryWritePort(18, JSON.stringify({...data, action: "Weaken", runTime: weakenTime}));
 				let weakened = await ns.weaken(serverInfo.hostname);
-				lastMsg = `Weakened ${serverInfo.hostname} by ${weakened.toFixed(2)}`;
+				lastMsg = `Weakened by ${weakened.toFixed(2)}`;
 				break;
 			case "Grow":
 				await ns.tryWritePort(18, JSON.stringify({...data, action: "Grow", runTime: growTime}));
 				let growth = await ns.grow(serverInfo.hostname);
-				lastMsg = `Added ${ns.nFormat(serverInfo.moneyAvailable * (growth - 1), '($0.00a)')} to ${serverInfo.hostname}`;
+				lastMsg = `Added ${ns.nFormat(serverInfo.moneyAvailable * (growth - 1), '($0.00a)')}`;
 				break;
 			case "Hack":
 				await ns.tryWritePort(18, JSON.stringify({...data, action: "Hack", runTime: hackTime}));
 				let stolen = await ns.hack(serverInfo.hostname);
-				lastMsg = `Stolen ${ns.nFormat(stolen, '($0.00a)')} from ${serverInfo.hostname}`;
+				lastMsg = `Stolen ${ns.nFormat(stolen, '($0.00a)')}`;
 				break;
 			case "Idle":
 				await ns.tryWritePort(18, JSON.stringify({...data, action: "Idle", runTime: 1000}));

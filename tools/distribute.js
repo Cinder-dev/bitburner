@@ -17,7 +17,9 @@ function startAll(ns) {
 		if (!ns.hasRootAccess(hostname)) {
 			rootServer(ns, hostname);
 		}
-		spawnWorkers(ns, hostname);
+		if (ns.hasRootAccess(hostname)) {
+			spawnWorkers(ns, hostname);
+		}
 	});
 }
 

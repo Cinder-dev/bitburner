@@ -54,40 +54,37 @@ export class ServersModule extends Module {
 		this.ns.clearLog();
 
 		if (this.servers.length > 0) {
-			this.servers.sort((a, b) => a.threads - b.threads);
+			this.servers.sort((a, b) => (a.threads !== b.threads ? (a.threads - b.threads) : a.hostname.localeCompare(b.hostname)));
+
 			this.ns.print(table(
-				["Hostname", "T", "Action", "Current", "Progress", "Bar", "Time Left", "Last Job Result"],
+				["Hostname", "T", "Target", "Action", "Current", "Time Left", "Bar", "Result"],
 				this.servers.map(s => s.hostname),
 				this.servers.map(s => `${s.threads}`),
+				this.servers.map(s => s.target),
 				this.servers.map(s => {
-					let server = status.servers.find(t => t.hostname == s.hostname);
+					let server = status.servers.find(t => t.hostname === s.hostname);
 					if (server === undefined) return "Loading";
 					return server.action;
 				}),
 				this.servers.map(s => s.action),
 				this.servers.map(s => {
 					let finishTime = s.startTime + s.runTime;
-					let timeRemaining = finishTime - now;
-					let percentage = (s.runTime - timeRemaining) / s.runTime;
-					return (percentage * 100).toFixed(1) + "%";
+					return this.ns.nFormat((finishTime - now) / 1000, '00:00:00');
 				}),
 				this.servers.map(s => {
+					const BarSize = 40;
 					let finishTime = s.startTime + s.runTime;
 					let timeRemaining = finishTime - now;
 					let percentage = (s.runTime - timeRemaining) / s.runTime;
-					let fill = Math.round(20 * percentage);
-					let drain = Math.round(20 * (1 - percentage));
-					if (isNaN(fill) || isNaN(drain) || !isFinite(fill) || !isFinite(drain) || fill < 0 || drain < 0) return "-".repeat(20);
+					let fill = Math.round(BarSize * percentage);
+					let drain = Math.round(BarSize * (1 - percentage));
+					if (isNaN(fill) || isNaN(drain) || !isFinite(fill) || !isFinite(drain) || fill < 0 || drain < 0) return "-".repeat(BarSize);
 					try {
 						return ("|".repeat(fill) + "-".repeat(drain));
 					} catch(err) {
 						console.log(fill + " " + drain);
-						return "-".repeat(20);
+						return "-".repeat(BarSize);
 					}
-				}),
-				this.servers.map(s => {
-					let finishTime = s.startTime + s.runTime;
-					return this.ns.nFormat((finishTime - now) / 1000, '00:00:00');
 				}),
 				this.servers.map(s => s.lastMsg),
 			));
@@ -103,6 +100,7 @@ export class ServersModule extends Module {
 			if (this.servers.filter(i => i.hostname === s.hostname).length === 0) {
 				this.servers.push({
 					threads: 0,
+					target: "",
 					runTime: 0,
 					lastMsg: "",
 					hostname: s.hostname,
