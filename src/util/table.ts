@@ -1,13 +1,15 @@
-const MaxReducer = (a, b) => a > b ? a : b;
+const MaxReducer = (a: number, b: number) => a > b ? a : b;
 
 /**
  * Create a Table display of the provided data
+ * headers size and number of columns must be equal
  * @param {string[]} headers Column Headers
- * @param  {...string[]} columns Column data
+ * @param  {string[][]} columns Column data
  */
- export function table(headers, ...columns) {
+ export function table(headers: string[], ...columns: string[][]): string {
+	 if (headers.length !== columns.length) return "";
 	// Calculate Column Widths
-	let widths = [];
+	let widths: number[] = [];
 	columns.forEach((c, i) => {
 		widths[i] = c.concat([headers[i]]).map(s => s.length).reduce(MaxReducer);
 	});

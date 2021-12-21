@@ -1,10 +1,10 @@
-export function scan(ns, parent, server, target, route) {
+export function scan(ns: NS, parent: string, server: string, target: string, route: string[]) {
 	const children = ns.scan(server);
 
 	for (const child of children) {
-		if (parent == child) continue;
+		if (parent === child) continue;
 
-		if (child == target) {
+		if (child === target) {
 			route.unshift(child);
 			route.unshift(server);
 			return true;
@@ -19,9 +19,8 @@ export function scan(ns, parent, server, target, route) {
 	return false;
 }
 
-/** @param {NS} ns Scripting Runtime */
-export async function main(ns) {
-	let server = ns.args[0];
+export async function main(ns: NS) {
+	let server = ns.args[0] as string;
 	if (!ns.serverExists(server)) {
 		ns.tprint("Server doesn't exist.");
 		return;
@@ -30,14 +29,14 @@ export async function main(ns) {
 
 	ns.tail("/tools/find.js", "home", ...ns.args);
 
-	let route = [];
+	let route: string[] = [];
 	scan(ns, '', 'home', server, route);
-	for (const i in route) {
+	for (let i = 0; i < route.length; i++) {
 		const extra = i > 0 ? "└ " : "";
 		ns.print(`${" ".repeat(i)}${extra}${route[i]}`);
 	}
 }
 
-export function autocomplete(data, args) {
+export function autocomplete(data: Autocomplete, args: string[]) {
 	return data.servers;
 }

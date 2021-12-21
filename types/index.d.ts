@@ -1,3 +1,23 @@
+interface NetscriptPort {
+  data: any[];
+  clear();
+  empty(): boolean;
+  full(): boolean;
+  peek(): any;
+  read(): any;
+  tryWrite(): boolean;
+  write(): any;
+}
+
+interface Autocomplete {
+  servers: string[];
+  txts: string[];
+  scripts: string[];
+  flags(schema: [string, string | number | boolean | string[]][]): any
+}
+
+type Flags = [string, (string | number | boolean | string[])][];
+
 /**
  * @public
  */
@@ -1307,10 +1327,10 @@ interface Singularity {
 
   /**
    * SF4.1 - Workout at the gym.
-   * 
+   *
    * @remarks
    * RAM cost: 2 GB
-   * 
+   *
 
    * This function will automatically set you to start working out at a gym to train
    * a particular stat. If you are already in the middle of some “working” action
@@ -1985,6 +2005,25 @@ interface Singularity {
    * @returns True if the installation was successful.
    */
   installBackdoor(): Promise<void>;
+
+  /**
+   * SF4.2 - Check if the player is focused.
+   * @remarks
+   * RAM cost: 0.1 GB
+   *
+   *
+   * @returns True if the player is focused.
+   */
+  isFocused(): boolean;
+
+  /**
+   * SF4.2 - Set the players focus.
+   * @remarks
+   * RAM cost: 0.1 GB
+   *
+   * @returns True if the focus was changed.
+   */
+  setFocus(focus: boolean): boolean;
 }
 
 /**
@@ -2270,6 +2309,22 @@ interface Hacknet {
    * @returns True if the upgrade is successfully purchased, and false otherwise..
    */
   spendHashes(upgName: string, upgTarget?: string): boolean;
+
+  /**
+   * Get the list of hash upgrades
+   * @remarks
+   * RAM cost: 0 GB
+   *
+   * This function is only applicable for Hacknet Servers (the upgraded version of a Hacknet Node).
+   *
+   * Returns the list of all available hash upgrades that can be used in the spendHashes function.
+   * @example
+   * ```ts
+   * const upgrades = hacknet.getHashUpgrades(); // ["Sell for Money","Sell for Corporation Funds",...]
+   * ```
+   * @returns An array containing the available upgrades
+   */
+  getHashUpgrades(): string[];
 
   /**
    * Get the level of a hash upgrade.
@@ -2831,9 +2886,9 @@ interface CodingContract {
    *
    * @param filename - Filename of the contract.
    * @param host - Host of the server containing the contract. Optional. Defaults to current server if not provided.
-   * @returns The specified contract’s data;
+   * @returns The specified contract’s data, data type depends on contract type.;
    */
-  getData(filename: string, host?: string): string;
+  getData(filename: string, host?: string): any;
 
   /**
    * Get the number of attempt remaining.
@@ -3707,6 +3762,29 @@ interface Stanek {
 /**
  * Collection of all functions passed to scripts
  * @public
+ * @remarks
+ * <b>Basic ns1 usage example:</b>
+ * ```ts
+ *  // Basic ns functions can be used directly
+ *  getHostname();
+ *  // Some related functions are gathered within a common namespace
+ *  stock.getPrice();
+ * ```
+ * {@link https://bitburner.readthedocs.io/en/latest/netscript/netscript1.html| ns1 in-game docs}
+ * <hr>
+ * <b>Basic ns2 usage example:</b>
+ * ```ts
+ * async function main(ns) {
+ *  // Basic ns functions can be accessed on the ns object
+ *  ns.getHostname();
+ *  // Some related functions are gathered under a sub-property of the ns object
+ *  ns.stock.getPrice();
+ *  // Some functions need to be await ed
+ *  await ns.hack('n00dles');
+ * }
+ * ```
+ * {@link https://bitburner.readthedocs.io/en/latest/netscript/netscriptjs.html| ns2 in-game docs}
+ * <hr>
  */
 interface NS extends Singularity {
   /**
@@ -3904,9 +3982,9 @@ interface NS extends Singularity {
    *
    * @example
    * ```ts
-   * //For example, assume the following returns 1:
+   * //For example, assume the following returns 0.01:
    * hackAnalyze("foodnstuff");
-   * //This means that if hack the foodnstuff server, then you will steal 1% of its total money. If you hack using N threads, then you will steal N% of its total money.
+   * //This means that if hack the foodnstuff server, then you will steal 1% of its total money. If you hack using N threads, then you will steal N*0.01 times its total money.
    * ```
    * @param host - Hostname of the target server.
    * @returns The percentage of money you will steal from the target server with a single hack.
@@ -4142,15 +4220,14 @@ interface NS extends Singularity {
    * @remarks
    * RAM cost: 0.2 GB
    *
-   * Returns an array containing the hostnames or IPs of all servers that are one
-   * node way from the specified target server. The hostnames/IPs in the returned
+   * Returns an array containing the hostnames of all servers that are one
+   * node way from the specified target server. The hostnames in the returned
    * array are strings.
    *
    * @param host - Hostname of the server to scan.
-   * @param hostnames - Optional boolean specifying whether the function should output hostnames (if true) or IP addresses (if false).
-   * @returns Returns an string of hostnames or IP.
+   * @returns Returns an string of hostnames.
    */
-  scan(host: string, hostnames?: boolean): string[];
+  scan(host?: string): string[];
 
   /**
    * Runs NUKE.exe on a server.
@@ -4281,7 +4358,7 @@ interface NS extends Singularity {
    * @param args - Additional arguments to pass into the new script that is being run. Note that if any arguments are being passed into the new script, then the second argument numThreads must be filled in with a value.
    * @returns Returns the PID of a successfully started script, and 0 otherwise.
    */
-  run(script: string, numThreads?: number, ...args: string[]): number;
+  run(script: string, numThreads?: number, ...args: (number | string)[]): number;
 
   /**
    * Start another script on any server.
@@ -4321,7 +4398,7 @@ interface NS extends Singularity {
    * @param args - Additional arguments to pass into the new script that is being run. Note that if any arguments are being passed into the new script, then the third argument numThreads must be filled in with a value.
    * @returns Returns the PID of a successfully started script, and 0 otherwise.
    */
-  exec(script: string, host: string, numThreads?: number, ...args: string[]): number;
+  exec(script: string, host: string, numThreads?: number, ...args: Array<string | number | boolean>): number;
 
   /**
    * Terminate current script and start another in 10s.
@@ -4376,7 +4453,7 @@ interface NS extends Singularity {
    * @param args - Arguments to identify which script to kill.
    * @returns True if the script is successfully killed, and false otherwise.
    */
-  kill(script: string | number, host: string, ...args: string[]): boolean;
+  kill(script: string | number, host?: string, ...args: string[]): boolean;
 
   /**
    * Terminate all scripts on a server.
@@ -4584,7 +4661,7 @@ interface NS extends Singularity {
    * RAM cost: 0.1 GB
    *
    * Returns the server’s instrinsic “growth parameter”. This growth
-   * parameter is a number between 1 and 100 that represents how
+   * parameter is a number between 0 and 100 that represents how
    * quickly the server’s money grows. This parameter affects the
    * percentage by which the server’s money is increased when using the
    * grow function. A higher growth parameter will result in a
@@ -4767,7 +4844,7 @@ interface NS extends Singularity {
    * RAM cost: 0.3 GB
    * @returns info about a running script
    */
-  getRunningScript(filename: string | number, hostname: string, ...args: (string | number)[]): RunningScript;
+  getRunningScript(filename?: string | number, hostname?: string, ...args: (string | number)[]): RunningScript;
 
   /**
    * Get cost of purchasing a server.
@@ -4842,13 +4919,12 @@ interface NS extends Singularity {
   deleteServer(host: string): boolean;
 
   /**
-   * Returns an array with either the hostnames or IPs of all of the servers you have purchased.
+   * Returns an array with the hostnames of all of the servers you have purchased.
    *
    * @remarks 2.25 GB
-   * @param hostnameMode - Optional. Defaults to true. Returns hostnames if true, and IPs if false.
-   * @returns Returns an array with either the hostnames or IPs of all of the servers you have purchased.
+   * @returns Returns an array with the hostnames of all of the servers you have purchased.
    */
-  getPurchasedServers(hostnameMode?: boolean): string[];
+  getPurchasedServers(): string[];
 
   /**
    * Returns the maximum number of servers you can purchase.
@@ -4884,7 +4960,7 @@ interface NS extends Singularity {
    * @param data - Data to write.
    * @param mode - Defines the write mode. Only valid when writing to text files.
    */
-  write(handle: string, data?: string[] | number, mode?: "w" | "a"): Promise<void>;
+  write(handle: string, data?: string | string[] | number, mode?: "w" | "a"): Promise<void>;
 
   /**
    * Attempt to write to a port.
@@ -4986,7 +5062,7 @@ interface NS extends Singularity {
    * @param port - Port number. Must be an integer between 1 and 20.
    * @returns Data in the specified port.
    */
-  getPortHandle(port: number): any[];
+  getPortHandle(port: number): NetscriptPort;
 
   /**
    * Delete a file.
@@ -5202,7 +5278,7 @@ interface NS extends Singularity {
    * @param format - Formatter.
    * @returns Formated number.
    */
-  nFormat(n: number, format: string): number;
+  nFormat(n: number, format: string): string;
 
   /**
    * Format time to readable string
@@ -5470,12 +5546,12 @@ interface WarehouseAPI {
    * @param all - Sell in all city
    */
   sellProduct(
-    divisionName: string,
-    cityName: string,
-    productName: string,
-    amt: string,
-    price: string,
-    all: boolean,
+      divisionName: string,
+      cityName: string,
+      productName: string,
+      amt: string,
+      price: string,
+      all: boolean,
   ): void;
   /**
    * Discontinue a product.
@@ -5559,12 +5635,12 @@ interface WarehouseAPI {
    * @param amt - Amount of material to export.
    */
   exportMaterial(
-    sourceDivision: string,
-    sourceCity: string,
-    targetDivision: string,
-    targetCity: string,
-    materialName: string,
-    amt: number,
+      sourceDivision: string,
+      sourceCity: string,
+      targetDivision: string,
+      targetCity: string,
+      materialName: string,
+      amt: number,
   ): void;
   /**
    * Cancel material export
@@ -5576,12 +5652,12 @@ interface WarehouseAPI {
    * @param amt - Amount of material to export.
    */
   cancelExportMaterial(
-    sourceDivision: string,
-    sourceCity: string,
-    targetDivision: string,
-    targetCity: string,
-    materialName: string,
-    amt: number,
+      sourceDivision: string,
+      sourceCity: string,
+      targetDivision: string,
+      targetCity: string,
+      materialName: string,
+      amt: number,
   ): void;
   /**
    * Purchase warehouse for a new city
@@ -5604,11 +5680,11 @@ interface WarehouseAPI {
    * @param marketingInvest - Amount to invest for the marketing of the product.
    */
   makeProduct(
-    divisionName: string,
-    cityName: string,
-    productName: string,
-    designInvest: number,
-    marketingInvest: number,
+      divisionName: string,
+      cityName: string,
+      productName: string,
+      designInvest: number,
+      marketingInvest: number,
   ): void;
 }
 

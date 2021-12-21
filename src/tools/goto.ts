@@ -1,15 +1,14 @@
-import { scan } from '/tools/find.js';
+import { scan } from './find.js';
 
-/** @param {NS} ns Scripting Runtime */
-export async function main(ns) {
-	let server = ns.args[0];
+export async function main(ns: NS) {
+	let server = ns.args[0] as string;
 	if (!ns.serverExists(server)) {
 		ns.tprint("Server doesn't exist.");
 		return;
 	}
 	ns.disableLog("ALL");
 
-	let route = [];
+	let route: string[] = [];
 	scan(ns, '', 'home', server, route);
 	route.shift();
 	for (let host of route) {
@@ -17,6 +16,6 @@ export async function main(ns) {
 	}
 }
 
-export function autocomplete(data, args) {
+export function autocomplete(data: Autocomplete, args: string[]) {
 	return data.servers;
 }
