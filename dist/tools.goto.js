@@ -1,4 +1,4 @@
-import { scan } from './find.js';
+import { scan } from "tools.find.js";
 export async function main(ns) {
     let server = ns.args[0];
     if (!ns.serverExists(server)) {

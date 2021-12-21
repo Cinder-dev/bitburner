@@ -1,5 +1,5 @@
-import { Module } from 'cc/module.js';
-import {CCRuntime, CCState} from "cc/commandCenter";
+import { Module } from './cc.module.js';
+import {CCRuntime, CCState} from "./cc.commandCenter.js";
 
 let isRunning = false;
 

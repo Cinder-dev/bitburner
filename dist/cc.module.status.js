@@ -1,6 +1,6 @@
-import { MoneyFormat, TimeFormat, Hacks, Doc } from "cc/constants.js";
-import { Module } from 'cc/module.js';
-import { table } from "util/table.js";
+import { MoneyFormat, TimeFormat, Hacks, Doc } from "./cc.constants.js";
+import { Module } from './cc.module.js';
+import { table } from "./util.table.js";
 let isRunning = false;
 export async function main(ns) {
     ns.disableLog("ALL");
@@ -101,7 +101,10 @@ export class Status extends Module {
         try {
             const left = [];
             const right = [];
-            function row(l, r) { left.push(l); right.push(r); }
+            function row(l, r) {
+                left.push(l);
+                right.push(r);
+            }
             row("- Current -", "---");
             row("Uptime", this.ns.nFormat(this.ns.getPlayer().playtimeSinceLastAug / 1000, TimeFormat));
             row("Hacks", Hacks.map(hack => this.ns.fileExists(hack) ? 1 : 0).reduce((a, b) => a + b).toString());

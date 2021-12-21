@@ -1,4 +1,4 @@
-import { getAllServers } from 'util/lists.js';
+import { getAllServers } from './util.lists.js';
 let instance = null;
 const StartFlags = [["fresh", false]];
 export function autocomplete(data, args) {

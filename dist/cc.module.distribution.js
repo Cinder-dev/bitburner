@@ -1,4 +1,4 @@
-import { Module } from 'cc/module.js';
+import { Module } from './cc.module.js';
 let isRunning = false;
 export async function main(ns) {
     ns.disableLog("ALL");

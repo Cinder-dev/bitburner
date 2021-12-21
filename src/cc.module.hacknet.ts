@@ -1,14 +1,14 @@
-import { Module } from 'cc/module.js';
-import { table } from 'util/table.js';
-import { MoneyFormat, TimeFormat } from "cc/constants.js";
-import {CCRuntime, CCState} from "cc/commandCenter";
+import {Module} from './cc.module.js';
+import {table} from './util.table.js';
+import {MoneyFormat, TimeFormat} from "./cc.constants.js";
+import {CCRuntime, CCState} from "./cc.commandCenter.js";
 
 let isRunning = false;
 
 export async function main(ns: NS) {
 	ns.disableLog("ALL");
 	// Check for command port
-	if (ns.args.length === 0) { 
+	if (ns.args.length === 0) {
 		ns.print("Module Port required");
 		return;
 	}
@@ -26,12 +26,13 @@ export async function main(ns: NS) {
 
 export class HackNet extends Module {
 	hacknet: Hacknet;
+
 	constructor(ns: NS, port: number) {
 		super(ns, "Hacknet", port, 500);
 		this.hacknet = ns.hacknet;
 	}
 
-	async update(command: any | null, status: {state: CCState, runtime: CCRuntime} | null) {
+	async update(command: any | null, status: { state: CCState, runtime: CCRuntime } | null) {
 		this.ns.clearLog();
 		let nodes = Array(this.hacknet.numNodes()).fill(0);
 

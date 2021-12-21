@@ -1,14 +1,14 @@
-import { MoneyFormat, TimeFormat, Hacks, Doc} from "cc/constants.js";
-import { Module } from 'cc/module.js';
-import {table} from "util/table.js";
-import {CCRuntime, CCState} from "cc/commandCenter";
+import {MoneyFormat, TimeFormat, Hacks, Doc} from "./cc.constants.js";
+import {Module} from './cc.module.js';
+import {table} from "./util.table.js";
+import {CCRuntime, CCState} from "./cc.commandCenter.js";
 
 let isRunning = false;
 
 export async function main(ns: NS) {
 	ns.disableLog("ALL");
 	// Check for command port
-	if (ns.args.length === 0) { 
+	if (ns.args.length === 0) {
 		ns.print("Module Port required");
 		return;
 	}
@@ -63,7 +63,7 @@ export class Status extends Module {
 		Doc.getElementsByTagName('head')[0].appendChild(style);
 	}
 
-	async update(command: any | null, status : { state: CCState, runtime: CCRuntime} | null) {
+	async update(command: any | null, status: { state: CCState, runtime: CCRuntime } | null) {
 		if (status === null) return;
 		const {servers} = status.state;
 		const {player} = status.runtime;
@@ -72,7 +72,7 @@ export class Status extends Module {
 		this.ns.clearLog();
 		// Private Server Costs
 		const costs = [];
-		for(let i = 2; i <= 1048576; i = i * 2) {
+		for (let i = 2; i <= 1048576; i = i * 2) {
 			const cost = this.ns.getPurchasedServerCost(i);
 			costs.push({
 				size: i,
@@ -132,7 +132,10 @@ export class Status extends Module {
 			const left: string[] = [];
 			const right: string[] = [];
 
-			function row(l: string, r: string) { left.push(l); right.push(r); }
+			function row(l: string, r: string) {
+				left.push(l);
+				right.push(r);
+			}
 
 			row("- Current -", "---");
 			row("Uptime", this.ns.nFormat(this.ns.getPlayer().playtimeSinceLastAug / 1000, TimeFormat))

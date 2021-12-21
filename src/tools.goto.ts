@@ -1,4 +1,4 @@
-import { scan } from 'tools/find.js';
+import { scan } from "tools.find.js"
 
 export async function main(ns: NS) {
 	let server = ns.args[0] as string;

@@ -1,5 +1,5 @@
-import { Module } from 'cc/module.js';
-import { table } from 'util/table.js';
+import { Module } from './cc.module.js';
+import { table } from './util.table.js';
 let isRunning = false;
 export async function main(ns) {
     ns.disableLog("ALL");

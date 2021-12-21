@@ -1,19 +1,19 @@
 const baseURL = "https://raw.githubusercontent.com/Cinder-dev/bitburner/main/dist";
 const files = [
-    "/cc/modules/distribution.js",
-    "/cc/modules/hacknet.js",
-    "/cc/modules/servers.js",
-    "/cc/modules/status.js",
-    "/cc/worker/worker.js",
-    "/cc/commandCenter.js",
-    "/cc/constants.js",
-    "/cc/module.js",
-    "/servers/buy.js",
-    "/tools/backdoor.js",
-    "/tools/find.js",
-    "/tools/goto.js",
-    "/util/lists.js",
-    "/util/table.js",
+    "/cc.modules.distribution.js",
+    "/cc.modules.hacknet.js",
+    "/cc.modules.servers.js",
+    "/cc.modules.status.js",
+    "/cc.worker.js",
+    "/cc.commandCenter.js",
+    "/cc.constants.js",
+    "/cc.module.js",
+    "/tools.buyServer.js",
+    "/tools.backdoor.js",
+    "/tools.find.js",
+    "/tools.goto.js",
+    "/util.lists.js",
+    "/util.table.js",
 ];
 export async function main(ns) {
     ns.toast("Updating Code From Github", "info");
