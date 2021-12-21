@@ -1,7 +1,7 @@
-import { MoneyFormat, TimeFormat, Hacks, Doc} from "../constants.js";
-import { Module } from '../module.js';
-import {table} from "../../util/table.js";
-import {CCRuntime, CCState} from "../commandCenter";
+import { MoneyFormat, TimeFormat, Hacks, Doc} from "cc/constants.js";
+import { Module } from 'cc/module.js';
+import {table} from "util/table.js";
+import {CCRuntime, CCState} from "cc/commandCenter";
 
 let isRunning = false;
 

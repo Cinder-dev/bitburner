@@ -1,6 +1,6 @@
-import {Module} from '../module.js';
-import {table} from '../../util/table.js';
-import {CCRuntime, CCState} from "../commandCenter.js";
+import {Module} from 'cc/module.js';
+import {table} from 'util/table.js';
+import {CCRuntime, CCState} from "cc/commandCenter.js";
 
 let isRunning = false;
 

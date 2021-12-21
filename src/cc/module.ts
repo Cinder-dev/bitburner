@@ -1,4 +1,4 @@
-import {CCRuntime, CCState} from "./commandCenter";
+import {CCRuntime, CCState} from "cc/commandCenter";
 
 export class Module {
 	ns: NS;

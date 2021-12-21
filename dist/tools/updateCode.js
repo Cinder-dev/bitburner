@@ -1,8 +1,5 @@
 const baseURL = "https://raw.githubusercontent.com/Cinder-dev/bitburner/main/dist";
 const files = [
-    "/cc/commands/modules.js",
-    "/cc/commands/target.js",
-    "/cc/commands/task.js",
     "/cc/modules/distribution.js",
     "/cc/modules/hacknet.js",
     "/cc/modules/servers.js",

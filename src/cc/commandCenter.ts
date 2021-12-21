@@ -1,4 +1,4 @@
-import {getAllServers} from '../util/lists.js';
+import {getAllServers} from 'util/lists.js';
 
 let instance: CommandCenter | null = null;
 

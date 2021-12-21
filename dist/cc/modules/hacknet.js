@@ -1,6 +1,6 @@
-import { Module } from '../module.js';
-import { table } from '../../util/table.js';
-import { MoneyFormat, TimeFormat } from "../constants.js";
+import { Module } from 'cc/module.js';
+import { table } from 'util/table.js';
+import { MoneyFormat, TimeFormat } from "cc/constants.js";
 let isRunning = false;
 export async function main(ns) {
     ns.disableLog("ALL");

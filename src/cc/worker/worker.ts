@@ -1,5 +1,5 @@
-import {CCRuntime, CCState} from "../commandCenter.js";
-import {MoneyFormat} from "../constants.js";
+import {CCRuntime, CCState} from "cc/commandCenter.js";
+import {MoneyFormat} from "cc/constants.js";
 
 export async function main(ns: NS) {
 	ns.disableLog("ALL");

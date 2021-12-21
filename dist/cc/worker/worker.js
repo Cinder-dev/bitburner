@@ -1,4 +1,4 @@
-import { MoneyFormat } from "../constants.js";
+import { MoneyFormat } from "cc/constants.js";
 export async function main(ns) {
     ns.disableLog("ALL");
     const id = ns.getRunningScript().pid;
